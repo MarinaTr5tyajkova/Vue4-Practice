@@ -1,14 +1,28 @@
-import { createStore } from 'vuex'
+import Vue from 'vue';
+import Vuex from 'vuex';
+import api from '@/utils/api';
 
-export default createStore({
+Vue.use(Vuex);
+
+export default new Vuex.Store({
   state: {
+    token: localStorage.getItem('token') || null,
   },
   getters: {
-  },
-  mutations: {
+    isAuthenticated(state) {
+      return !!state.token;
+    },
   },
   actions: {
+    async register({ commit }, userData) {
+      const response = await api.register(userData);
+      commit('SET_TOKEN', response.data.user_token);
+      localStorage.setItem('token', response.data.user_token);
+    },
   },
-  modules: {
-  }
-})
+  mutations: {
+    SET_TOKEN(state, token) {
+      state.token = token;
+    },
+  },
+});
