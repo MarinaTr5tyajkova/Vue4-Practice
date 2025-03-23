@@ -7,6 +7,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     token: localStorage.getItem('token') || null,
+    products: [],
   },
   getters: {
     isAuthenticated(state) {
@@ -19,10 +20,25 @@ export default new Vuex.Store({
       commit('SET_TOKEN', response.data.user_token);
       localStorage.setItem('token', response.data.user_token);
     },
+    async fetchProducts() {
+      const response = await api.fetchProducts();
+      return response;
+    },
+    async addToCart({ commit }, productId) {
+      await api.addToCart(productId);
+      commit('ADD_TO_CART', productId);
+    },
+    logout({ commit }) {
+      commit('SET_TOKEN', null);
+      localStorage.removeItem('token');
+    },
   },
   mutations: {
     SET_TOKEN(state, token) {
       state.token = token;
+    },
+    ADD_TO_CART(state, productId) {
+      
     },
   },
 });
