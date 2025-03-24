@@ -1,4 +1,4 @@
-const API_URL = process.env.VUE_APP_API_URL;
+const API_URL = 'http://lifestealer86.ru/public/api-shop';
 
 export default {
   register(userData) {
@@ -11,19 +11,11 @@ export default {
       return response.json();
     });
   },
-  fetchProducts() {
-    return fetch(`${API_URL}/products`).then(response => {
-      if (!response.ok) throw response;
-      return response.json();
-    });
-  },
-  addToCart(productId) {
-    return fetch(`${API_URL}/cart/${productId}`, {
+  login(credentials) {
+    return fetch(`${API_URL}/login`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      },
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(credentials),
     }).then(response => {
       if (!response.ok) throw response;
       return response.json();

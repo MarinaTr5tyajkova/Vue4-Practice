@@ -1,20 +1,8 @@
 <template>
-    <div class="register">
-      <h2>Регистрация</h2>
-      <form @submit.prevent="handleRegister">
-        
-        <div :class="['field', { error: errors.fio }]">
-          <label>ФИО:</label>
-          <input
-            v-model="formData.fio"
-            type="text"
-            placeholder="Введите ФИО"
-            required
-          />
-          <p v-if="errors.fio">{{ errors.fio }}</p>
-        </div>
-  
-        
+    <div class="login">
+      <h2>Вход</h2>
+      <form @submit.prevent="handleLogin">
+       
         <div :class="['field', { error: errors.email }]">
           <label>Email:</label>
           <input
@@ -38,13 +26,16 @@
           <p v-if="errors.password">{{ errors.password }}</p>
         </div>
   
-        
+       
         <div class="buttons">
           <button type="submit" :disabled="isLoading">
-            {{ isLoading ? 'Регистрация...' : 'Зарегистрироваться' }}
+            {{ isLoading ? 'Вход...' : 'Войти' }}
           </button>
           <button type="button" @click="goBack">Назад</button>
         </div>
+  
+        
+        <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
       </form>
     </div>
   </template>
@@ -54,26 +45,28 @@
     data() {
       return {
         formData: {
-          fio: '',
           email: '',
           password: '',
         },
         errors: {},
+        errorMessage: '',
         isLoading: false,
       };
     },
     methods: {
-      async handleRegister() {
+      async handleLogin() {
         this.errors = {};
+        this.errorMessage = '';
         this.isLoading = true;
   
         try {
-          await this.$store.dispatch('register', this.formData);
-          this.$router.push('/login');
+          await this.$store.dispatch('login', this.formData);
+          this.$router.push('/');
         } catch (error) {
           if (error.response && error.response.data.error) {
             const { errors } = error.response.data.error;
             this.errors = errors || {};
+            this.errorMessage = 'Ошибка аутентификации';
           }
         } finally {
           this.isLoading = false;
@@ -87,7 +80,7 @@
   </script>
   
   <style scoped>
-  .register {
+  .login {
     font-family: Arial, sans-serif;
     max-width: 400px;
     margin: 50px auto;
@@ -155,5 +148,11 @@
   button[type="button"] {
     background-color: #3280f6;
     color: white;
+  }
+  
+  .error {
+    color: red;
+    text-align: center;
+    margin-top: 15px;
   }
   </style>
