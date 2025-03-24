@@ -54,24 +54,24 @@
       };
     },
     methods: {
-      async handleLogin() {
+        async handleLogin() {
         this.errors = {};
         this.errorMessage = '';
         this.isLoading = true;
-  
+
         try {
-          await this.$store.dispatch('login', this.formData);
-          this.$router.push('/');
+            await this.$store.dispatch('login', this.formData);
+            this.$router.push('/');
         } catch (error) {
-          if (error.response && error.response.data.error) {
+            if (error.response && error.response.data.error) {
             const { errors } = error.response.data.error;
             this.errors = errors || {};
             this.errorMessage = 'Ошибка аутентификации';
-          }
+            }
         } finally {
-          this.isLoading = false;
+            this.isLoading = false;
         }
-      },
+        },
       goBack() {
         this.$router.push('/');
       },

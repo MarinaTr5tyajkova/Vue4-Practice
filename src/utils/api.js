@@ -1,21 +1,44 @@
-const API_URL = 'http://lifestealer86.ru/public/api-shop';
+const API_URL = process.env.VUE_APP_API_URL;
 
 export default {
-  register(userData) {
-    return fetch(`${API_URL}/signup`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(userData),
+  getCart() {
+    return fetch(`${API_URL}/cart`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
     }).then(response => {
       if (!response.ok) throw response;
       return response.json();
     });
   },
-  login(credentials) {
-    return fetch(`${API_URL}/login`, {
+  addToCart(productId) {
+    return fetch(`${API_URL}/cart/${productId}`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(credentials),
+      headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+    }).then(response => {
+      if (!response.ok) throw response;
+      return response.json();
+    });
+  },
+  removeFromCart(cartItemId) {
+    return fetch(`${API_URL}/cart/${cartItemId}`, {
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+    }).then(response => {
+      if (!response.ok) throw response;
+      return response.json();
+    });
+  },
+  placeOrder() {
+    return fetch(`${API_URL}/order`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+    }).then(response => {
+      if (!response.ok) throw response;
+      return response.json();
+    });
+  },
+  getOrders() {
+    return fetch(`${API_URL}/order`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
     }).then(response => {
       if (!response.ok) throw response;
       return response.json();

@@ -7,6 +7,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     token: localStorage.getItem('token') || null,
+    orders: [],
   },
   getters: {
     isAuthenticated(state) {
@@ -14,24 +15,18 @@ export default new Vuex.Store({
     },
   },
   actions: {
-    async register({ commit }, userData) {
-      const response = await api.register(userData);
-      commit('SET_TOKEN', response.data.user_token);
-      localStorage.setItem('token', response.data.user_token);
-    },
-    async login({ commit }, credentials) {
-      const response = await api.login(credentials);
-      commit('SET_TOKEN', response.data.user_token);
-      localStorage.setItem('token', response.data.user_token);
-    },
-    logout({ commit }) {
-      commit('SET_TOKEN', null);
-      localStorage.removeItem('token');
+    async fetchOrders({ commit }) {
+      const response = await api.getOrders();
+      commit('SET_ORDERS', response.data);
+      return response;
     },
   },
   mutations: {
     SET_TOKEN(state, token) {
       state.token = token;
+    },
+    SET_ORDERS(state, orders) {
+      state.orders = orders;
     },
   },
 });
